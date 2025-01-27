@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render,redirect, get_object_or_404
 from .models import Post
 from catalogs.models import Category
 from authors.models import Author
 from tags.models import Tag
+from .models import Comment
 
 
 def home(request):
@@ -52,5 +53,18 @@ def post_detail(request, year, month, day, slug):
         posted_at__month = month,
         posted_at__day = day
     )
-    ctx = {'post':post}
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        comment = request.POST.get('comment')
+        if name and email and comment:
+            Comment.objects.create(
+                post=post,
+                name=name,
+                email=email,
+                comment=comment
+            )
+            return redirect('posts:detail', year=post.posted_at.year, month=post.posted_at.month, day=post.posted_at.day, slug=post.slug)
+    comments = post.comments.all()
+    ctx = {'post':post, 'comments':comments}
     return render(request, 'posts/post-detail.html', ctx)

@@ -31,16 +31,18 @@
     <section class="mt-12 bg-white rounded-lg shadow-md p-6">
         <h2 class="text-2xl font-bold mb-6">Comments</h2>
         <div class="space-y-6">
-            <!-- Comment 1 -->
-            <div class="flex">
-                <div>
-                    <h3 class="font-semibold">Alice Johnson</h3>
-                    <p class="text-gray-600 text-sm mb-2">Posted on May 16, 2023</p>
-                    <p>Great article! I'm excited to see how AI will continue to shape the web development landscape. Do you think there will be any negative impacts on job opportunities for developers?</p>
+            {% for comment in comments %}
+                <div class="flex">
+                    <div>
+                        <h3 class="font-semibold">{{ comment.name }}</h3>
+                        <p class="text-gray-600 text-sm mb-2">Posted on {{ comment.posted_on }}</p>
+                        <p>{{ comment.comment }}</p>
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
             <!-- Add Comment Form -->
-            <form class="mt-8">
+            <form class="mt-8" method="post">
+                {% csrf_token %}
                 <h3 class="text-xl font-semibold mb-4">Add a Comment</h3>
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
